@@ -1,32 +1,124 @@
 import java.util.Scanner;
 
 public class Menu {
-    private void createAccountView(Bank bank) {
 
+    private void goToMainMenuView(Scanner scanner) {
+        String userInput = "";
+        while (!userInput.equals("0")) {
+            System.out.println("press 0 to go to main menu");
+            userInput = scanner.nextLine();
+        }
+    }
+
+    private void createAccountView(Bank bank) {
+        System.out.println("You are on the Create account page.");
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Please enter your name:");
+        String accountName = scanner.nextLine();
+        System.out.println("Please enter your initial deposit:");
+        double accountBalance = scanner.nextDouble();
+        scanner.nextLine();
+        int accountNumber = bank.getLastAccountNumber() + 1;
+        Account account = new Account(accountName, accountNumber, accountBalance);
+        bank.addAccount(account);
+        System.out.println("New account created successfully.");
+        System.out.println(account);
+        goToMainMenuView(scanner);
     }
 
     private void displayAllAccountsView(Bank bank) {
-
+        System.out.println("You are on the Display all accounts page. Here are all the accounts:");
+        for (Account account : bank.getAccounts()) {
+            System.out.println(account);
+            System.out.println();
+        }
+        Scanner scanner = new Scanner(System.in);
+        goToMainMenuView(scanner);
     }
 
     private void updateAccountView(Bank bank) {
-
+        System.out.println("You are on the update account page.");
+        System.out.println("Please enter account number:");
+        Scanner scanner = new Scanner(System.in);
+        int accountNumber = scanner.nextInt();
+        scanner.nextLine();
+        Account account = bank.searchAccount(accountNumber);
+        if(account == null) {
+            System.out.println("Account not found.");
+        } else {
+            System.out.println("Account found. Account name is: " + account.getAccountName());
+            System.out.println("Please enter new account name:");
+            String accountName = scanner.nextLine();
+            account.updateAccountName(accountName);
+        }
+        goToMainMenuView(scanner);
     }
 
     private void deleteAccountView(Bank bank) {
-
+        System.out.println("You are on the delete account page.");
+        System.out.println("Please enter account number:");
+        Scanner scanner = new Scanner(System.in);
+        int accountNumber = scanner.nextInt();
+        scanner.nextLine();
+        Account account = bank.searchAccount(accountNumber);
+        if(account == null) {
+            System.out.println("Account not found.");
+        } else {
+            bank.getAccounts().remove(account);
+            System.out.println("Account deleted successfully.");
+        }
+        goToMainMenuView(scanner);
     }
 
-    private void depositMoney(Bank bank) {
-
+    private void depositMoneyView(Bank bank) {
+        System.out.println("You are on the deposit money page.");
+        System.out.println("Please enter your account number:");
+        Scanner scanner = new Scanner(System.in);
+        int accountNumber = scanner.nextInt();
+        scanner.nextLine();
+        Account account = bank.searchAccount(accountNumber);
+        if(account == null) {
+            System.out.println("Account not found.");
+        } else {
+            System.out.println("Please enter amount to deposit:");
+            int amount = scanner.nextInt();
+            scanner.nextLine();
+            account.depositMoney(amount);
+        }
+        goToMainMenuView(scanner);
     }
 
-    private void withdrawMoney(Bank bank) {
-
+    private void withdrawMoneyView(Bank bank) {
+        System.out.println("You are on the withdraw money page.");
+        System.out.println("Please enter your account number:");
+        Scanner scanner = new Scanner(System.in);
+        int accountNumber = scanner.nextInt();
+        scanner.nextLine();
+        Account account = bank.searchAccount(accountNumber);
+        if(account == null) {
+            System.out.println("Account not found.");
+        } else {
+            System.out.println("Please enter amount to withdraw:");
+            int amount = scanner.nextInt();
+            scanner.nextLine();
+            account.withdrawMoney(amount);
+        }
+        goToMainMenuView(scanner);
     }
 
-    private void searchAccount(Bank bank) {
-
+    private void searchAccountView(Bank bank) {
+        System.out.println("You are on the search account page.");
+        System.out.println("Please enter account number:");
+        Scanner scanner = new Scanner(System.in);
+        int accountNumber = scanner.nextInt();
+        scanner.nextLine();
+        Account account = bank.searchAccount(accountNumber);
+        if(account == null) {
+            System.out.println("Account not found.");
+        } else {
+            System.out.println(account);
+        }
+        goToMainMenuView(scanner);
     }
     public void showMenu(Bank bank) {
         boolean menuFlag = true;
@@ -34,7 +126,7 @@ public class Menu {
             System.out.println("You are on the main menu of " + bank.getBankName() + ". Please select an option:");
             System.out.println("1. Create a new account");
             System.out.println("2. Display all accounts");
-            System.out.println("3. Update an account");
+            System.out.println("3. Update an account(change account name)");
             System.out.println("4. Delete an account");
             System.out.println("5. Deposit an amount into your account");
             System.out.println("6. Withdraw an amount from your account");
@@ -58,13 +150,13 @@ public class Menu {
                     deleteAccountView(bank);
                     break;
                 case 5:
-                    depositMoney(bank);
+                    depositMoneyView(bank);
                     break;
                 case 6:
-                    withdrawMoney(bank);
+                    withdrawMoneyView(bank);
                     break;
                 case 7:
-                    searchAccount(bank);
+                    searchAccountView(bank);
                     break;
                 case 8:
                     menuFlag = false;
